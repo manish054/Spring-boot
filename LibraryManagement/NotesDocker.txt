@@ -1,0 +1,96 @@
+Docker
+	is an open platform for developing, shipping and running an application
+
+what problem it solves?
+	it provides the solution of virtual environment with all the dependencies and setups needed to run the application developed across different configuration.
+
+
+Docker file
+	Text document which contains all the commands that a user can call on the command line to assemble an image. we will write all the commands needed to build an image.
+
+Docker image
+	Template to create a container -> its as like as a java class 
+
+Docker container
+	Running instance of a docker image is called a container. Container hold entire package to run application.
+
+Steps
+-> Dockerfile -> image -> container
+
+Commands
+docker --version //checking version
+docker pull image_name //to pull an image
+docker images // to check images
+docker ps //to check running container/s
+docker ps -a //list of all containers
+docker run image_id //to run image
+docker search image //to search an image
+docker run --name container_name -d image_id //to run an image in detached mode in background. It will not receive input or display output
+docker run --name container_name -it d image_name/id //detached and interactive
+docker exec -it container_id command // to execute the container it interactive mode
+docker inspect container_id // to get the details of container
+$ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+e.g: 
+docker run --name postGres -e POSTGRES_PASSWORD=postgres -d postgres
+docker stop containerId/name // to stop a container
+docker rm container_Id // to remove form docker ps -a
+docker rmi image_name/Id // to remove images
+docker build -t some_name . // . means root directory
+docker login
+docker logs
+docker volume // to create a storage to be used by docker itself
+
+
+Steps to deploy Springboot-Postgres Application
+
+docker-compose.yml
+
+version: "3.7"
+services:
+ app:
+  build: .
+  ports:
+   - "8080:8080"
+  networks:
+   - s-network
+  
+ postgres:
+  image: postgres:latest
+  environment:
+   POSTGRES_USER: admin
+   POSTGRES_PASSWORD: 12345
+   POSTGRES_DB: demo
+  ports:
+   - 5433:5432
+  networks:
+   - s-network
+  volumes:
+   -  postgres-s-data:/var/lib/postgresql/data
+  
+networks:
+ s-network:
+  driver: bridge
+  
+volumes:
+  postgres-s-data:
+
+
+application.proprties
+
+#Configuration for docker these are important
+#url = jdbc:postgresql://postgres:5432/docker-compose's POSTGES_DB
+#user = docker-compose's POSTGES_USER
+#password = docker-compose's POSTGES_PASSWORD
+
+spring.datasource.url = jdbc:postgresql://postgres:5432/demo
+spring.datasource.username = admin
+spring.datasource.password = 12345
+spring.datasource.driver-class-name= org.postgresql.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.sql.init.mode = always
+spring.sql.init.platform=postgres
+spring.jpa.defer-datasource-initialization=true
+
+
