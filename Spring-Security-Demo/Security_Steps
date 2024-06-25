@@ -1,0 +1,11 @@
+Spring Security
+
+1. add dependencies
+	spring security web
+
+2. Doing security configuration
+	e.g: spring-security-demo -> securityConfig.java
+
+3. add dependent classes and beans
+
+4. add connection with db in application properties
